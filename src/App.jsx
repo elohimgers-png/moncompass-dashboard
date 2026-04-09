@@ -1,63 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { fetchData } from './api';
+import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 function App() {
-  // All available countries
+  // Hard-coded data to ensure it works on Vercel (Static Data)
+  const staticData = {
+    inflation: [
+      { year: '2020', Kenya: 5.4, Uganda: 3.2, Tanzania: 3.3, Singapore: -0.2, Malaysia: -1.1 },
+      { year: '2021', Kenya: 6.1, Uganda: 2.1, Tanzania: 3.7, Singapore: 2.3, Malaysia: 2.5 },
+      { year: '2022', Kenya: 7.6, Uganda: 5.4, Tanzania: 4.4, Singapore: 6.5, Malaysia: 3.4 },
+      { year: '2023', Kenya: 6.9, Uganda: 2.8, Tanzania: 3.0, Singapore: 4.8, Malaysia: 2.5 },
+    ],
+    gdp: [
+      { year: '2020', Kenya: 0.3, Uganda: 3.0, Tanzania: 4.8, Singapore: -2.8, Malaysia: -5.9 },
+      { year: '2021', Kenya: 7.6, Uganda: 6.7, Tanzania: 4.9, Singapore: 8.9, Malaysia: 3.1 },
+      { year: '2022', Kenya: 4.8, Uganda: 4.6, Tanzania: 4.6, Singapore: 3.8, Malaysia: 8.7 },
+      { year: '2023', Kenya: 5.0, Uganda: 5.3, Tanzania: 5.2, Singapore: 1.1, Malaysia: 3.6 },
+    ]
+  };
+
   const allCountries = [
     { code: 'KE', name: 'Kenya' },
     { code: 'UG', name: 'Uganda' },
     { code: 'TZ', name: 'Tanzania' },
-    { code: 'ZA', name: 'South Africa' },
-    { code: 'MY', name: 'Malaysia' },
-    { code: 'ID', name: 'Indonesia' },
-    { code: 'BD', name: 'Bangladesh' },
-    { code: 'SG', name: 'Singapore' }
+    { code: 'SG', name: 'Singapore' },
+    { code: 'MY', name: 'Malaysia' }
   ];
 
-  // State for selected countries and data
-  const [selectedCountries, setSelectedCountries] = useState(['KE', 'UG']); // Default: Kenya & Uganda
-  const [chartData, setChartData] = useState({ inflation: [], gdp: [] });
-  const [loading, setLoading] = useState(false);
+  const [selectedCountries, setSelectedCountries] = useState(['KE', 'UG', 'SG']); // Default selection
 
-  // Fetch data whenever selection changes
-  useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      
-      // 1. Fetch Inflation
-      const infResult = await fetchData(selectedCountries, 'FP.CPI.TOTL.ZG', 2010, 2024);
-      setChartData(prev => ({ ...prev, inflation: formatData(infResult) }));
-
-      // 2. Fetch GDP
-      const gdpResult = await fetchData(selectedCountries, 'NY.GDP.MKTP.KD.ZG', 2010, 2024);
-      setChartData(prev => ({ ...prev, gdp: formatData(gdpResult) }));
-      
-      setLoading(false);
-    };
-    
-    if (selectedCountries.length > 0) {
-      loadData();
-    }
-  }, [selectedCountries]);
-
-  // Helper to format data
-  const formatData = (result) => {
-    const formatted = result.map(item => ({
-      year: item.date,
-      country: item.country.value,
-      value: item.value
-    }));
-
-    const grouped = {};
-    formatted.forEach(item => {
-      if (!grouped[item.year]) grouped[item.year] = { year: item.year };
-      grouped[item.year][item.country] = item.value;
-    });
-    return Object.values(grouped);
-  };
-
-  // Handle checkbox click
   const handleCountryChange = (e) => {
     const { value, checked } = e.target;
     if (checked) {
@@ -67,14 +37,27 @@ function App() {
     }
   };
 
+  // Filter data based on selection
+  const getFilteredData = (data) => {
+    return data.map(item => {
+      const newItem = { year: item.year };
+      allCountries.forEach(c => {
+        if (selectedCountries.includes(c.code)) {
+          newItem[c.name] = item[c.name];
+        }
+      });
+      return newItem;
+    });
+  };
+
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <h1>MonCompass Interactive Dashboard</h1>
+      <h1>MonCompass Dashboard (Static Data)</h1>
+      <p>Comparing Sub-Saharan Africa vs Southeast Asia (2020-2023)</p>
       
-      {/* Controls */}
       <div style={{ background: '#f4f4f4', padding: '15px', borderRadius: '8px', marginBottom: '20px' }}>
         <h3>Select Countries to Compare:</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
           {allCountries.map(c => (
             <label key={c.code} style={{ display: 'flex', alignItems: 'center' }}>
               <input 
@@ -90,44 +73,37 @@ function App() {
         </div>
       </div>
 
-      {loading && <div>Loading data...</div>}
+      <h2>Inflation (Consumer Prices %)</h2>
+      <div style={{ width: '100%', height: 300, marginBottom: '40px' }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={getFilteredData(staticData.inflation)}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="year" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            {allCountries.filter(c => selectedCountries.includes(c.code)).map((c, i) => (
+              <Bar key={c.code} dataKey={c.name} fill={`hsl(${i * 50}, 70%, 50%)`} />
+            ))}
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
 
-      {/* Charts */}
-      {!loading && (
-        <>
-          <h2>Inflation (Consumer Prices %)</h2>
-          <div style={{ width: '100%', height: 300, marginBottom: '40px' }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData.inflation}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="year" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                {allCountries.filter(c => selectedCountries.includes(c.code)).map((c, i) => (
-                  <Bar key={c.code} dataKey={c.name} fill={`hsl(${i * 40}, 70%, 50%)`} />
-                ))}
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-
-          <h2>GDP Growth (Annual %)</h2>
-          <div style={{ width: '100%', height: 300 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData.gdp}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="year" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                {allCountries.filter(c => selectedCountries.includes(c.code)).map((c, i) => (
-                  <Bar key={c.code} dataKey={c.name} fill={`hsl(${i * 40 + 20}, 70%, 50%)`} />
-                ))}
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </>
-      )}
+      <h2>GDP Growth (Annual %)</h2>
+      <div style={{ width: '100%', height: 300 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={getFilteredData(staticData.gdp)}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="year" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            {allCountries.filter(c => selectedCountries.includes(c.code)).map((c, i) => (
+              <Bar key={c.code} dataKey={c.name} fill={`hsl(${i * 50 + 180}, 70%, 50%)`} />
+            ))}
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }
