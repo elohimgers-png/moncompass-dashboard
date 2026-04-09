@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 function App() {
-  // Hard-coded data to ensure it works on Vercel (Static Data)
   const staticData = {
     inflation: [
       { year: '2020', Kenya: 5.4, Uganda: 3.2, Tanzania: 3.3, Singapore: -0.2, Malaysia: -1.1 },
@@ -26,7 +25,7 @@ function App() {
     { code: 'MY', name: 'Malaysia' }
   ];
 
-  const [selectedCountries, setSelectedCountries] = useState(['KE', 'UG', 'SG']); // Default selection
+  const [selectedCountries, setSelectedCountries] = useState(['KE', 'UG', 'SG']);
 
   const handleCountryChange = (e) => {
     const { value, checked } = e.target;
@@ -37,7 +36,6 @@ function App() {
     }
   };
 
-  // Filter data based on selection
   const getFilteredData = (data) => {
     return data.map(item => {
       const newItem = { year: item.year };
