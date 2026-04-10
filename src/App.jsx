@@ -38,7 +38,7 @@ function App() {
       { year: '2023', Kenya: 5.0, Uganda: 5.3, Tanzania: 5.2, Singapore: 1.1, Malaysia: 3.6, 'South Africa': 0.6, Indonesia: 5.0, Bangladesh: 5.8 },
       { year: '2024', Kenya: 5.2, Uganda: 6.0, Tanzania: 5.5, Singapore: 3.0, Malaysia: 4.5, 'South Africa': 1.0, Indonesia: 5.1, Bangladesh: 5.8 },
       { year: '2025', Kenya: 5.5, Uganda: 6.2, Tanzania: 6.0, Singapore: 2.5, Malaysia: 4.8, 'South Africa': 1.5, Indonesia: 5.2, Bangladesh: 6.5 }
-    ]
+    ],
     population: [
       { year: '2010', Kenya: 40.9, Uganda: 33.8, Tanzania: 49.3, Singapore: 5.1, Malaysia: 28.3, 'South Africa': 51.0, Indonesia: 242.5, Bangladesh: 149.6 },
       { year: '2011', Kenya: 42.7, Uganda: 35.0, Tanzania: 50.1, Singapore: 5.2, Malaysia: 28.9, 'South Africa': 51.6, Indonesia: 245.8, Bangladesh: 152.4 },
@@ -52,7 +52,7 @@ function App() {
       { year: '2019', Kenya: 55.5, Uganda: 46.1, Tanzania: 56.8, Singapore: 5.7, Malaysia: 33.4, 'South Africa': 57.8, Indonesia: 271.7, Bangladesh: 175.5 },
       { year: '2020', Kenya: 56.9, Uganda: 47.1, Tanzania: 57.7, Singapore: 5.7, Malaysia: 33.8, 'South Africa': 58.9, Indonesia: 273.8, Bangladesh: 178.3 },
       { year: '2021', Kenya: 58.3, Uganda: 48.2, Tanzania: 58.6, Singapore: 5.5, Malaysia: 34.2, 'South Africa': 59.9, Indonesia: 275.7, Bangladesh: 181.0 },
-      { year: '2022', Kenya: 59.7, Uganda: 49.3, Tanzania: 59.5, Singapore: 5.6, Malaysia: 34.6, 'South Africa': 60.0, Indonesia: 277.5, Bangladesh: 183.6 },
+      { year: '2022', Kenya: 59.7, Uganda: 49.3, Tanzania: 59.5, Singapore: 6.5, Malaysia: 34.6, 'South Africa': 60.0, Indonesia: 277.5, Bangladesh: 183.6 },
       { year: '2023', Kenya: 61.0, Uganda: 50.4, Tanzania: 60.4, Singapore: 5.9, Malaysia: 35.0, 'South Africa': 60.1, Indonesia: 279.1, Bangladesh: 186.2 },
       { year: '2024', Kenya: 62.2, Uganda: 51.5, Tanzania: 61.2, Singapore: 6.0, Malaysia: 35.4, 'South Africa': 60.5, Indonesia: 281.0, Bangladesh: 188.8 },
       { year: '2025', Kenya: 63.4, Uganda: 52.6, Tanzania: 62.0, Singapore: 6.1, Malaysia: 35.8, 'South Africa': 61.0, Indonesia: 282.8, Bangladesh: 191.4 }
@@ -74,8 +74,10 @@ function App() {
       { year: '2023', Kenya: 153.0, Uganda: 3900, Tanzania: 2500, Singapore: 1.3, Malaysia: 4.6, 'South Africa': 19.0, Indonesia: 16000, Bangladesh: 110 },
       { year: '2024', Kenya: 165.0, Uganda: 4000, Tanzania: 2600, Singapore: 1.3, Malaysia: 4.7, 'South Africa': 19.5, Indonesia: 16500, Bangladesh: 117 },
       { year: '2025', Kenya: 170.0, Uganda: 4100, Tanzania: 2700, Singapore: 1.3, Malaysia: 4.8, 'South Africa': 20.0, Indonesia: 17000, Bangladesh: 120 }
-    ]};
-    const allCountries = [
+    ]
+  };
+
+  const allCountries = [
     { code: 'KE', name: 'Kenya' },
     { code: 'UG', name: 'Uganda' },
     { code: 'TZ', name: 'Tanzania' },
@@ -85,6 +87,7 @@ function App() {
     { code: 'ID', name: 'Indonesia' },
     { code: 'BD', name: 'Bangladesh' }
   ];
+
   const [selectedCountries, setSelectedCountries] = useState(['KE', 'UG', 'SG']);
 
   const handleCountryChange = (e) => {
@@ -111,17 +114,17 @@ function App() {
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <h1>MonCompass Dashboard v2 (Static Data)</h1>
-      <p>Comparing Sub-Saharan Africa vs Southeast Asia (2020-2023)</p>
-      
+      <p>Comparing Sub-Saharan Africa vs Southeast Asia (2010-2025)</p>
+
       <div style={{ background: '#f4f4f4', padding: '15px', borderRadius: '8px', marginBottom: '20px' }}>
         <h3>Select Countries to Compare:</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
           {allCountries.map(c => (
             <label key={c.code} style={{ display: 'flex', alignItems: 'center' }}>
-              <input 
-                type="checkbox" 
-                value={c.code} 
-                checked={selectedCountries.includes(c.code)} 
+              <input
+                type="checkbox"
+                value={c.code}
+                checked={selectedCountries.includes(c.code)}
                 onChange={handleCountryChange}
                 style={{ marginRight: '5px' }}
               />
@@ -148,7 +151,7 @@ function App() {
       </div>
 
       <h2>GDP Growth (Annual %)</h2>
-      <div style={{ width: '100%', height: 300 }}>
+      <div style={{ width: '100%', height: 300, marginBottom: '40px' }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={getFilteredData(staticData.gdp)}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -162,11 +165,7 @@ function App() {
           </BarChart>
         </ResponsiveContainer>
       </div>
-<<<<<<< HEAD
 
-=======
-    </div>
->>>>>>> 359f7e1a2123f18131fe583243575ad926789e9c
       <h2>Population (Millions)</h2>
       <div style={{ width: '100%', height: 300, marginBottom: '40px' }}>
         <ResponsiveContainer width="100%" height="100%">
@@ -195,9 +194,10 @@ function App() {
             {allCountries.filter(c => selectedCountries.includes(c.code)).map((c, i) => (
               <Bar key={c.code} dataKey={c.name} fill={`hsl(${i * 40 + 90}, 70%, 50%)`} />
             ))}
-                </BarChart>
+          </BarChart>
         </ResponsiveContainer>
       </div>
+
     </div>
   );
 }
