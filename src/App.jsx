@@ -88,8 +88,8 @@ function App() {
     { code: 'BD', name: 'Bangladesh' }
   ];
 
-  const [selectedCountries, setSelectedCountries] = useState(['KE', 'UG', 'SG']);
-
+  const [selectedCountries, setSelectedCountries] = useState(['KE', 'Ug', 'SG']);
+  const [darkMode, setDarkMode] = useState(false);
   const handleCountryChange = (e) => {
     const { value, checked } = e.target;
     if (checked) {
@@ -136,9 +136,25 @@ function App() {
       };
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+    <div style={{ padding: '20px', backgroundColor: darkMode ? '#1a1a1a' : '#ffffff', fontFamily: 'Abel, sans-serif' }}>
       <h1>MonCompass Dashboard v2 (Static Data)</h1>
       <p>Comparing Sub-Saharan Africa vs Southeast Asia (2010-2025)</p>
+      <div style={{ marginBottom: '20px', textAlign: 'right' }}>
+        <button
+          onClick={() => setDarkMode(!darkMode)}
+          style={{
+            padding: '8px 16px',
+            cursor: 'pointer',
+            background: darkMode ? '#444' : '#eee',
+            color: darkMode ? '#fff' : '#333',
+            border: 'none',
+            borderRadius: '20px',
+            fontWeight: 'bold'
+          }}
+        >
+          {darkMode ? '☀ Light Mode' : '☾ Dark Mode'}
+        </button>
+      </div>
 
       <div style={{ background: '#f4f4f4', padding: '15px', borderRadius: '8px', marginBottom: '20px' }}>
         <h3>Select Countries to Compare:</h3>
@@ -162,8 +178,8 @@ function App() {
           Download Inflation Data (CSV)
         </button>
       </div>
-      <h2>Inflation (Consumer Prices %)</h2>
-      <div style={{ width: '100%', height: 300, marginBottom: '40px' }}>
+      <h2 style={{ color: darkMode ? '#e0e0e0' : '#333' }}>Inflation (Consumer Prices %)</h2>
+      <div style={{ width: '100%', height: 300, marginBottom: '40px', backgroundColor: darkMode ? '#2a2a2a' : 'white' }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={getFilteredData(staticData.inflation)}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -178,8 +194,8 @@ function App() {
         </ResponsiveContainer>
       </div>
 
-      <h2>GDP Growth (Annual %)</h2>
-      <div style={{ width: '100%', height: 300, marginBottom: '40px' }}>
+      <h2 style={{ color: darkMode ? '#e0e0e0' : '#333' }}>GDP Growth (Annual %)</h2>
+      <div style={{ width: '100%', height: 300, marginBottom: '40px', backgroundColor: darkMode ? '#2a2a2a' : 'white' }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={getFilteredData(staticData.gdp)}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -194,7 +210,7 @@ function App() {
         </ResponsiveContainer>
       </div>
 
-      <h2>Inflation Trend (Line Chart)</h2>
+      <h2 style={{ color: darkMode ? '#e0e0e0' : '#333' }}>Inflation Trend (Line chart)</h2>
       <div style={{ width: '100%', height: 300, marginBottom: '40px' }}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={getFilteredData(staticData.inflation)}>
@@ -210,8 +226,8 @@ function App() {
         </ResponsiveContainer>
       </div>
 
-      <h2>Population (Millions)</h2>
-      <div style={{ width: '100%', height: 300, marginBottom: '40px' }}>
+      <h2 style={{ color: darkMode ? '#e0e0e0' : '#333' }}>Population (Millions)</h2>
+      <div style={{ width: '100%', height: 300, 'marginBottom': '40px', backgroundColor: darkMode ? '#2a2a2a' : 'white' }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={getFilteredData(staticData.population)}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -226,8 +242,8 @@ function App() {
         </ResponsiveContainer>
       </div>
 
-      <h2>Exchange Rate (LCU per USD)</h2>
-      <div style={{ width: '100%', height: 300 }}>
+      <h2 style={{ color: darkMode ? '#e0e0e0' : '#333' }}>Exchange Rate (LCU per USD)</h2>
+      <div style={{ width: '100%', height: '300', backgroundColor: darkMode ? '#2a2a2a' : 'white' }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={getFilteredData(staticData.exchange)}>
             <CartesianGrid strokeDasharray="3 3" />
