@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 function App() {
   const staticData = {
@@ -166,6 +166,22 @@ function App() {
         </ResponsiveContainer>
       </div>
 
+      <h2>Inflation Trend (Line Chart)</h2>
+      <div style={{ width: '100%', height: 300, marginBottom: '40px' }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={getFilteredData(staticData.inflation)}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="year" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            {allCountries.filter(c => selectedCountries.includes(c.code)).map((c, i) => (
+              <Line type="monotone" key={c.code} dataKey={c.name} stroke={`hsl(${i * 60}, 70%, 50%)`} strokeWidth={2} dot={{ r: 4 }} />
+            ))}
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+      
       <h2>Population (Millions)</h2>
       <div style={{ width: '100%', height: 300, marginBottom: '40px' }}>
         <ResponsiveContainer width="100%" height="100%">
