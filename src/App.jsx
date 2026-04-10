@@ -136,7 +136,7 @@ function App() {
       };
 
   return (
-    <div style={{ padding: '20px', backgroundColor: darkMode ? '#1a1a1a' : '#ffffff', fontFamily: 'Abel, sans-serif' }}>
+    <div style={{ padding: '20px', backgroundColor: darkMode ? '#1a1a1a' : '#ffffff', fontFamily: 'Abel, sans-serif', color: darkMode ? '#e0e0e0' : '#333', '@media (max-width: 600px) { padding: '10px' }' }}>
       <h1>MonCompass Dashboard v2 (Static Data)</h1>
       <p>Comparing Sub-Saharan Africa vs Southeast Asia (2010-2025)</p>
       <div style={{ marginBottom: '20px', textAlign: 'right' }}>
@@ -158,7 +158,7 @@ function App() {
 
       <div style={{ background: '#f4f4f4', padding: '15px', borderRadius: '8px', marginBottom: '20px' }}>
         <h3>Select Countries to Compare:</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', media: '(max-width: 600px) { grid-template-columns: repeat(2, 1fr); media: (max-width: 400px) { grid-template-columns: 1fr; }' }}>
           {allCountries.map(c => (
             <label key={c.code} style={{ display: 'flex', alignItems: 'center' }}>
               <input
@@ -179,7 +179,7 @@ function App() {
         </button>
       </div>
       <h2 style={{ color: darkMode ? '#e0e0e0' : '#333' }}>Inflation (Consumer Prices %)</h2>
-      <div style={{ width: '100%', height: 300, marginBottom: '40px', backgroundColor: darkMode ? '#2a2a2a' : 'white' }}>
+      <div style={{ width: '100%', height: '250', marginBottom: '40px', backgroundColor: darkMode ? '#2a2a2a' : 'white' }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={getFilteredData(staticData.inflation)}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -195,7 +195,7 @@ function App() {
       </div>
 
       <h2 style={{ color: darkMode ? '#e0e0e0' : '#333' }}>GDP Growth (Annual %)</h2>
-      <div style={{ width: '100%', height: 300, marginBottom: '40px', backgroundColor: darkMode ? '#2a2a2a' : 'white' }}>
+      <div style={{ width: '100%', height: '250', marginBottom: '40px', backgroundColor: darkMode ? '#2a2a2a' : 'white' }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={getFilteredData(staticData.gdp)}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -211,7 +211,7 @@ function App() {
       </div>
 
       <h2 style={{ color: darkMode ? '#e0e0e0' : '#333' }}>Inflation Trend (Line chart)</h2>
-      <div style={{ width: '100%', height: 300, marginBottom: '40px' }}>
+      <div style={{ width: '100%', height: '250', marginBottom: '40px' }}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={getFilteredData(staticData.inflation)}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -227,7 +227,7 @@ function App() {
       </div>
 
       <h2 style={{ color: darkMode ? '#e0e0e0' : '#333' }}>Population (Millions)</h2>
-      <div style={{ width: '100%', height: 300, 'marginBottom': '40px', backgroundColor: darkMode ? '#2a2a2a' : 'white' }}>
+      <div style={{ width: '100%', height: '250', 'marginBottom': '40px', backgroundColor: darkMode ? '#2a2a2a' : 'white' }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={getFilteredData(staticData.population)}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -243,7 +243,7 @@ function App() {
       </div>
 
       <h2 style={{ color: darkMode ? '#e0e0e0' : '#333' }}>Exchange Rate (LCU per USD)</h2>
-      <div style={{ width: '100%', height: '300', backgroundColor: darkMode ? '#2a2a2a' : 'white' }}>
+      <div style={{ width: '100%', height: '250', backgroundColor: darkMode ? '#2a2a2a' : 'white' }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={getFilteredData(staticData.exchange)}>
             <CartesianGrid strokeDasharray="3 3" />
