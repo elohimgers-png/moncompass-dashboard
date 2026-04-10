@@ -162,7 +162,11 @@ function App() {
           </BarChart>
         </ResponsiveContainer>
       </div>
+<<<<<<< HEAD
 
+=======
+    </div>
+>>>>>>> 359f7e1a2123f18131fe583243575ad926789e9c
       <h2>Population (Millions)</h2>
       <div style={{ width: '100%', height: 300, marginBottom: '40px' }}>
         <ResponsiveContainer width="100%" height="100%">
@@ -193,9 +197,13 @@ function App() {
             ))}
           </BarChart>
         </ResponsiveContainer>
+<<<<<<< HEAD
       </div>
       </div>
       );
+=======
+      </div>)
+>>>>>>> 359f7e1a2123f18131fe583243575ad926789e9c
 }
 
 export default App;
