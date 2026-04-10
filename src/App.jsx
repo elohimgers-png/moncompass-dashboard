@@ -76,7 +76,7 @@ function App() {
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <h1>MonCompass Dashboard (Static Data)</h1>
+      <h1>MonCompass Dashboard v2 (Static Data)</h1>
       <p>Comparing Sub-Saharan Africa vs Southeast Asia (2020-2023)</p>
       
       <div style={{ background: '#f4f4f4', padding: '15px', borderRadius: '8px', marginBottom: '20px' }}>
