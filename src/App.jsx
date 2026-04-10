@@ -193,7 +193,7 @@ function App() {
             ))}
           </BarChart>
         </ResponsiveContainer>
-      </div>);
+      </div>)
 }
 
 export default App;
