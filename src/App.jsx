@@ -39,7 +39,42 @@ function App() {
       { year: '2024', Kenya: 5.2, Uganda: 6.0, Tanzania: 5.5, Singapore: 3.0, Malaysia: 4.5, 'South Africa': 1.0, Indonesia: 5.1, Bangladesh: 5.8 },
       { year: '2025', Kenya: 5.5, Uganda: 6.2, Tanzania: 6.0, Singapore: 2.5, Malaysia: 4.8, 'South Africa': 1.5, Indonesia: 5.2, Bangladesh: 6.5 }
     ]
-  };
+    population: [
+      { year: '2010', Kenya: 40.9, Uganda: 33.8, Tanzania: 49.3, Singapore: 5.1, Malaysia: 28.3, 'South Africa': 51.0, Indonesia: 242.5, Bangladesh: 149.6 },
+      { year: '2011', Kenya: 42.7, Uganda: 35.0, Tanzania: 50.1, Singapore: 5.2, Malaysia: 28.9, 'South Africa': 51.6, Indonesia: 245.8, Bangladesh: 152.4 },
+      { year: '2012', Kenya: 44.4, Uganda: 36.3, Tanzania: 51.0, Singapore: 5.3, Malaysia: 29.4, 'South Africa': 52.3, Indonesia: 249.0, Bangladesh: 155.2 },
+      { year: '2013', Kenya: 46.1, Uganda: 37.7, Tanzania: 51.8, Singapore: 5.4, Malaysia: 29.9, 'South Africa': 53.0, Indonesia: 252.2, Bangladesh: 158.1 },
+      { year: '2014', Kenya: 47.8, Uganda: 39.1, Tanzania: 52.6, Singapore: 5.5, Malaysia: 30.4, 'South Africa': 53.7, Indonesia: 255.5, Bangladesh: 161.0 },
+      { year: '2015', Kenya: 49.4, Uganda: 40.5, Tanzania: 53.5, Singapore: 5.5, Malaysia: 31.0, 'South Africa': 54.5, Indonesia: 258.7, Bangladesh: 163.9 },
+      { year: '2016', Kenya: 51.0, Uganda: 41.9, Tanzania: 54.3, Singapore: 5.6, Malaysia: 31.6, 'South Africa': 55.4, Indonesia: 261.9, Bangladesh: 166.8 },
+      { year: '2017', Kenya: 52.5, Uganda: 43.3, Tanzania: 55.2, Singapore: 5.7, Malaysia: 32.2, 'South Africa': 56.2, Indonesia: 265.2, Bangladesh: 169.7 },
+      { year: '2018', Kenya: 54.0, Uganda: 44.7, Tanzania: 56.0, Singapore: 5.6, Malaysia: 32.8, 'South Africa': 57.0, Indonesia: 268.5, Bangladesh: 172.6 },
+      { year: '2019', Kenya: 55.5, Uganda: 46.1, Tanzania: 56.8, Singapore: 5.7, Malaysia: 33.4, 'South Africa': 57.8, Indonesia: 271.7, Bangladesh: 175.5 },
+      { year: '2020', Kenya: 56.9, Uganda: 47.1, Tanzania: 57.7, Singapore: 5.7, Malaysia: 33.8, 'South Africa': 58.9, Indonesia: 273.8, Bangladesh: 178.3 },
+      { year: '2021', Kenya: 58.3, Uganda: 48.2, Tanzania: 58.6, Singapore: 5.5, Malaysia: 34.2, 'South Africa': 59.9, Indonesia: 275.7, Bangladesh: 181.0 },
+      { year: '2022', Kenya: 59.7, Uganda: 49.3, Tanzania: 59.5, Singapore: 5.6, Malaysia: 34.6, 'South Africa': 60.0, Indonesia: 277.5, Bangladesh: 183.6 },
+      { year: '2023', Kenya: 61.0, Uganda: 50.4, Tanzania: 60.4, Singapore: 5.9, Malaysia: 35.0, 'South Africa': 60.1, Indonesia: 279.1, Bangladesh: 186.2 },
+      { year: '2024', Kenya: 62.2, Uganda: 51.5, Tanzania: 61.2, Singapore: 6.0, Malaysia: 35.4, 'South Africa': 60.5, Indonesia: 281.0, Bangladesh: 188.8 },
+      { year: '2025', Kenya: 63.4, Uganda: 52.6, Tanzania: 62.0, Singapore: 6.1, Malaysia: 35.8, 'South Africa': 61.0, Indonesia: 282.8, Bangladesh: 191.4 }
+    ],
+    exchange: [
+      { year: '2010', Kenya: 79.3, Uganda: 2350, Tanzania: 1500, Singapore: 1.3, Malaysia: 3.2, 'South Africa': 7.3, Indonesia: 9000, Bangladesh: 70 },
+      { year: '2011', Kenya: 86.5, Uganda: 2450, Tanzania: 1550, Singapore: 1.3, Malaysia: 3.0, 'South Africa': 7.3, Indonesia: 8800, Bangladesh: 75 },
+      { year: '2012', Kenya: 85.5, Uganda: 2550, Tanzania: 1600, Singapore: 1.2, Malaysia: 3.1, 'South Africa': 8.2, Indonesia: 9600, Bangladesh: 80 },
+      { year: '2013', Kenya: 87.5, Uganda: 2650, Tanzania: 1650, Singapore: 1.3, Malaysia: 3.0, 'South Africa': 9.6, Indonesia: 12000, Bangladesh: 78 },
+      { year: '2014', Kenya: 90.0, Uganda: 2750, Tanzania: 1700, Singapore: 1.3, Malaysia: 3.3, 'South Africa': 11.5, Indonesia: 13000, Bangladesh: 77 },
+      { year: '2015', Kenya: 103.0, Uganda: 3500, Tanzania: 2100, Singapore: 1.4, Malaysia: 4.1, 'South Africa': 13.5, Indonesia: 14000, Bangladesh: 78 },
+      { year: '2016', Kenya: 102.0, Uganda: 3400, Tanzania: 2200, Singapore: 1.4, Malaysia: 4.2, 'South Africa': 14.5, Indonesia: 13000, Bangladesh: 80 },
+      { year: '2017', Kenya: 103.0, Uganda: 3600, Tanzania: 2250, Singapore: 1.4, Malaysia: 4.3, 'South Africa': 13.5, Indonesia: 13500, Bangladesh: 84 },
+      { year: '2018', Kenya: 100.0, Uganda: 3700, Tanzania: 2300, Singapore: 1.4, Malaysia: 4.1, 'South Africa': 14.5, Indonesia: 14500, Bangladesh: 85 },
+      { year: '2019', Kenya: 101.0, Uganda: 3800, Tanzania: 2300, Singapore: 1.4, Malaysia: 4.1, 'South Africa': 15.5, Indonesia: 14000, Bangladesh: 85 },
+      { year: '2020', Kenya: 108.0, Uganda: 3800, Tanzania: 2300, Singapore: 1.4, Malaysia: 4.1, 'South Africa': 16.5, Indonesia: 14000, Bangladesh: 85 },
+      { year: '2021', Kenya: 110.0, Uganda: 3600, Tanzania: 2300, Singapore: 1.4, Malaysia: 4.2, 'South Africa': 15.0, Indonesia: 14300, Bangladesh: 86 },
+      { year: '2022', Kenya: 123.0, Uganda: 3800, Tanzania: 2400, Singapore: 1.4, Malaysia: 4.5, 'South Africa': 17.8, Indonesia: 15500, Bangladesh: 105 },
+      { year: '2023', Kenya: 153.0, Uganda: 3900, Tanzania: 2500, Singapore: 1.3, Malaysia: 4.6, 'South Africa': 19.0, Indonesia: 16000, Bangladesh: 110 },
+      { year: '2024', Kenya: 165.0, Uganda: 4000, Tanzania: 2600, Singapore: 1.3, Malaysia: 4.7, 'South Africa': 19.5, Indonesia: 16500, Bangladesh: 117 },
+      { year: '2025', Kenya: 170.0, Uganda: 4100, Tanzania: 2700, Singapore: 1.3, Malaysia: 4.8, 'South Africa': 20.0, Indonesia: 17000, Bangladesh: 120 }
+    ]};
     const allCountries = [
     { code: 'KE', name: 'Kenya' },
     { code: 'UG', name: 'Uganda' },
@@ -128,7 +163,37 @@ function App() {
         </ResponsiveContainer>
       </div>
     </div>
-  );
+      <h2>Population (Millions)</h2>
+      <div style={{ width: '100%', height: 300, marginBottom: '40px' }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={getFilteredData(staticData.population)}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="year" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            {allCountries.filter(c => selectedCountries.includes(c.code)).map((c, i) => (
+              <Bar key={c.code} dataKey={c.name} fill={`hsl(${i * 40 + 60}, 70%, 50%)`} />
+            ))}
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+
+      <h2>Exchange Rate (LCU per USD)</h2>
+      <div style={{ width: '100%', height: 300 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={getFilteredData(staticData.exchange)}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="year" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            {allCountries.filter(c => selectedCountries.includes(c.code)).map((c, i) => (
+              <Bar key={c.code} dataKey={c.name} fill={`hsl(${i * 40 + 90}, 70%, 50%)`} />
+            ))}
+          </BarChart>
+        </ResponsiveContainer>
+      </div>);
 }
 
 export default App;
