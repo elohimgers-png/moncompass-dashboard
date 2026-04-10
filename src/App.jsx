@@ -3,7 +3,6 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 
 function App() {
   const staticData = {
-      const staticData = {
     inflation: [
       { year: '2010', Kenya: 4.1, Uganda: 4.0, Tanzania: 6.5, Singapore: 2.8, Malaysia: 1.7, 'South Africa': 4.3, Indonesia: 5.1, Bangladesh: 8.1 },
       { year: '2011', Kenya: 5.4, Uganda: 5.0, Tanzania: 6.2, Singapore: 5.2, Malaysia: 3.2, 'South Africa': 5.0, Indonesia: 5.4, Bangladesh: 10.7 },
