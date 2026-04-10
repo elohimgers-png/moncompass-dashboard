@@ -195,15 +195,11 @@ function App() {
             {allCountries.filter(c => selectedCountries.includes(c.code)).map((c, i) => (
               <Bar key={c.code} dataKey={c.name} fill={`hsl(${i * 40 + 90}, 70%, 50%)`} />
             ))}
-          </BarChart>
+                </BarChart>
         </ResponsiveContainer>
-<<<<<<< HEAD
       </div>
-      </div>
-      );
-=======
-      </div>)
->>>>>>> 359f7e1a2123f18131fe583243575ad926789e9c
+    </div>
+  );
 }
 
 export default App;
