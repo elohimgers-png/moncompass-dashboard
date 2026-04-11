@@ -88,7 +88,7 @@ function App() {
     { code: 'BD', name: 'Bangladesh' }
   ];
 
-  const [selectedCountries, setSelectedCountries] = useState(['KE', 'Ug', 'SG']);
+  const [selectedCountries, setSelectedCountries] = useState(['KE', 'UG', 'SG']);
   const [darkMode, setDarkMode] = useState(false);
   const handleCountryChange = (e) => {
     const { value, checked } = e.target;
@@ -208,7 +208,6 @@ function App() {
         </ResponsiveContainer>
       </div>
       <h2 style={{ color: darkMode ? '#e0e0e0' : '#333' }}>Inflation Trend (Line Chart)</h2>
-      <h2>Inflation Trend (Line Chart)</h2>
       <div style={{ width: '100%', height: 300, marginBottom: '40px', backgroundColor: darkMode ? '#2a2a2a' : 'white' }}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={getFilteredData(staticData.inflation)}>
@@ -224,7 +223,6 @@ function App() {
         </ResponsiveContainer>
       </div>
       <h2 style={{ color: darkMode ? '#e0e0e0' : '#333' }}>Population (Millions)</h2>
-      <h2>Population (Millions)</h2>
       <div style={{ width: '100%', height: 300, marginBottom: '40px', backgroundColor: darkMode ? '#2a2a2a' : 'white' }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={getFilteredData(staticData.population)}>
@@ -253,6 +251,24 @@ function App() {
             ))}
           </BarChart>
         </ResponsiveContainer>
+      </div>
+
+      {/* --- CREDIT FOOTER --- */}
+      <div style={{ 
+        marginTop: '50px', 
+        padding: '30px 20px', 
+        borderTop: '1px solid #ccc', 
+        textAlign: 'center', 
+        fontSize: '0.95rem', 
+        color: darkMode ? '#aaa' : '#555',
+        lineHeight: '1.6'
+      }}>
+        <p style={{ fontWeight: 'bold', marginBottom: '10px' }}>
+          This web app was conceptualised and designed by Eng. Dr. Gerson Japhet Fumbuka, a DBA Scholar at INTI International University and Colleges, Nilai, Malaysia
+        </p>
+        <p>
+          with close guidance from engineers and developers from <a href="https://huggingface.co/zai-org" target="_blank" rel="noopener noreferrer" style={{ color: '#007bff', textDecoration: 'none' }}>huggingface.co/zai-org</a>
+        </p>
       </div>
 
     </div>
