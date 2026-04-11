@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 function App() {
   const staticData = {
@@ -88,8 +88,8 @@ function App() {
     { code: 'BD', name: 'Bangladesh' }
   ];
 
-  const [selectedCountries, setSelectedCountries] = useState(['KE', 'Ug', 'SG']);
-  const [darkMode, setDarkMode] = useState(false);
+  const [selectedCountries, setSelectedCountries] = useState(['KE', 'UG', 'SG']);
+
   const handleCountryChange = (e) => {
     const { value, checked } = e.target;
     if (checked) {
@@ -110,54 +110,15 @@ function App() {
       return newItem;
     });
   };
-      // Helper function to convert data to CSV
-  const downloadCSV = (data, filename) => {
-    if (!data.length) return;
-    
-    // Extract headers (Year + Country Names)
-    const headers = ['year', ...allCountries.map(c => c.name)];
-    
-    // Convert data to CSV string
-    const csvRows = [
-      headers.join(','),
-      ...data.map(row => headers.map(fieldName => row[fieldName] !== undefined ? row[fieldName] : '').join(','))
-    ];
-    
-    const csvString = csvRows.join('\n');
-    const blob = new Blob([csvString], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', filename);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+
   return (
-    <div style={{ padding: '20px', backgroundColor: darkMode ? '#1a1a1a' : '#ffffff', fontFamily: 'Abel, sans-serif', color: darkMode ? '#e0e0e0' : '#333', '@media (max-width: 600px) { padding: '10px' }' }}>
+    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <h1>MonCompass Dashboard v2 (Static Data)</h1>
       <p>Comparing Sub-Saharan Africa vs Southeast Asia (2010-2025)</p>
-      <div style={{ marginBottom: '20px', textAlign: 'right' }}>
-        <button
-          onClick={() => setDarkMode(!darkMode)}
-          style={{
-            padding: '8px 16px',
-            cursor: 'pointer',
-            background: darkMode ? '#444' : '#eee',
-            color: darkMode ? '#fff' : '#333',
-            border: 'none',
-            borderRadius: '20px',
-            fontWeight: 'bold'
-          }}
-        >
-          {darkMode ? '☀ Light Mode' : '☾ Dark Mode'}
-        </button>
-      </div>
 
       <div style={{ background: '#f4f4f4', padding: '15px', borderRadius: '8px', marginBottom: '20px' }}>
         <h3>Select Countries to Compare:</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', media: '(max-width: 600px) { grid-template-columns: repeat(2, 1fr); media: (max-width: 400px) { grid-template-columns: 1fr; }' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
           {allCountries.map(c => (
             <label key={c.code} style={{ display: 'flex', alignItems: 'center' }}>
               <input
@@ -172,13 +133,9 @@ function App() {
           ))}
         </div>
       </div>
-      <div style={{ marginBottom: '20px', textAlign: 'right' }}>
-        <button onClick={() => downloadCSV(getFilteredData(staticData.inflation), 'inflation_data.csv')} style={{ padding: '8px 16px', cursor: 'pointer', background: '#007bff', color: 'white', border: 'none', borderRadius: '4px' }}>
-          Download Inflation Data (CSV)
-        </button>
-      </div>
-      <h2 style={{ color: darkMode ? '#e0e0e0' : '#333' }}>Inflation (Consumer Prices %)</h2>
-      <div style={{ width: '100%', height: '250', marginBottom: '40px', backgroundColor: darkMode ? '#2a2a2a' : 'white' }}>
+
+      <h2>Inflation (Consumer Prices %)</h2>
+      <div style={{ width: '100%', height: 300, marginBottom: '40px' }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={getFilteredData(staticData.inflation)}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -193,8 +150,8 @@ function App() {
         </ResponsiveContainer>
       </div>
 
-      <h2 style={{ color: darkMode ? '#e0e0e0' : '#333' }}>GDP Growth (Annual %)</h2>
-      <div style={{ width: '100%', height: '250', marginBottom: '40px', backgroundColor: darkMode ? '#2a2a2a' : 'white' }}>
+      <h2>GDP Growth (Annual %)</h2>
+      <div style={{ width: '100%', height: 300, marginBottom: '40px' }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={getFilteredData(staticData.gdp)}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -209,24 +166,8 @@ function App() {
         </ResponsiveContainer>
       </div>
 
-      <h2 style={{ color: darkMode ? '#e0e0e0' : '#333' }}>Inflation Trend (Line Chart)</h2>
-      <div style={{ width: '100%', height: '250', marginBottom: '40px' }}>
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={getFilteredData(staticData.inflation)}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="year" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            {allCountries.filter(c => selectedCountries.includes(c.code)).map((c, i) => (
-              <Line type="monotone" key={c.code} dataKey={c.name} stroke={`hsl(${i * 60}, 70%, 50%)`} strokeWidth={2} dot={{ r: 4 }} />
-            ))}
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-
-      <h2 style={{ color: darkMode ? '#e0e0e0' : '#333' }}>Population (Millions)</h2>
-      <div style={{ width: '100%', height: '250', 'marginBottom': '40px', backgroundColor: darkMode ? '#2a2a2a' : 'white' }}>
+      <h2>Population (Millions)</h2>
+      <div style={{ width: '100%', height: 300, marginBottom: '40px' }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={getFilteredData(staticData.population)}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -241,8 +182,8 @@ function App() {
         </ResponsiveContainer>
       </div>
 
-      <h2 style={{ color: darkMode ? '#e0e0e0' : '#333' }}>Exchange Rate (LCU per USD)</h2>
-      <div style={{ width: '100%', height: '250', backgroundColor: darkMode ? '#2a2a2a' : 'white' }}>
+      <h2>Exchange Rate (LCU per USD)</h2>
+      <div style={{ width: '100%', height: 300 }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={getFilteredData(staticData.exchange)}>
             <CartesianGrid strokeDasharray="3 3" />
