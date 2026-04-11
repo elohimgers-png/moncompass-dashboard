@@ -110,7 +110,30 @@ function App() {
       return newItem;
     });
   };
+  // Helper function to convert data to CSV
+  const downloadCSV = (data, filename) => {
+    if (!data.length) return;
 
+    // Extract headers (Year + Country Names)
+    const headers = ['year', ...allCountries.map(c => c.name)];
+    
+    // Convert data to CSV string
+    const csvRows = [
+      headers.join(','),
+      ...data.map(row => headers.map(fieldName => JSON.stringify(row[fieldName] !== undefined ? row[fieldName] : '')).join(','))
+    ];
+
+    const csvString = csvRows.join('\n');
+    const blob = new Blob([csvString], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <h1>MonCompass Dashboard v2 (Static Data)</h1>
@@ -133,7 +156,11 @@ function App() {
           ))}
         </div>
       </div>
-
+      <div style={{ marginBottom: '20px', textAlign: 'right' }}>
+        <button onClick={() => downloadCSV(getFilteredData(staticData.inflation), 'inflation_data.csv')} style={{ padding: '8px 16px', cursor: 'pointer', background: '#007bff', color: 'white', border: 'none', borderRadius: '4px' }}>
+          Download Inflation Data (CSV)
+        </button>
+      </div>
       <h2>Inflation (Consumer Prices %)</h2>
       <div style={{ width: '100%', height: 300, marginBottom: '40px' }}>
         <ResponsiveContainer width="100%" height="100%">
