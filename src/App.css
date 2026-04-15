@@ -1,0 +1,215 @@
+/* src/App.css */
+
+/* General Layout */
+.app-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 20px;
+    background-color: #f4f6f9;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .dark-mode {
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+  }
+  
+  /* Header */
+  .app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .dark-mode .app-header {
+    border-bottom: 1px solid #444;
+  }
+  
+  .app-header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+  }
+  
+  /* Controls */
+  .controls {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .toggle-btn, .download-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  
+  .toggle-btn {
+    background-color: #e0e0e0;
+    color: #333;
+  }
+  
+  .download-btn {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .toggle-btn:hover { background-color: #d0d0d0; }
+  .download-btn:hover { background-color: #0056b3; }
+  
+  .controls-section {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+  
+  .dark-mode .controls-section {
+    background: #2a2a2a;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+  
+  .controls-section h3 {
+    margin-top: 0;
+    font-size: 1.1rem;
+  }
+  
+  .checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.95rem;
+  }
+  
+  .checkbox-label input {
+    margin-right: 8px;
+    accent-color: #007bff;
+  }
+  
+  /* Statistics Table */
+  .stats-section {
+    margin-bottom: 40px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+  }
+  
+  .dark-mode .stats-section {
+    border-color: #444;
+    background-color: #2a2a2a;
+  }
+  
+  .stats-section h3 {
+    margin-top: 0;
+    color: #444;
+  }
+  
+  .dark-mode .stats-section h3 {
+    color: #fff;
+  }
+  
+  .stats-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .stats-table th, .stats-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .dark-mode .stats-table th, 
+  .dark-mode .stats-table td {
+    border-bottom: 1px solid #444;
+  }
+  
+  .stats-table th {
+    border-bottom: 2px solid #ddd;
+    font-weight: 600;
+  }
+  
+  .dark-mode .stats-table th {
+    border-bottom: 2px solid #555;
+  }
+  
+  /* Chart Sections */
+  .chart-section {
+    margin-bottom: 40px;
+  }
+  
+  .chart-section h2 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    color: #333;
+  }
+  
+  .dark-mode .chart-section h2 {
+    color: #e0e0e0;
+  }
+  
+  .chart-container {
+    width: 100%;
+    height: 350px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  
+  .dark-mode .chart-container {
+    background-color: #2a2a2a;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  
+  /* Footer */
+  .app-footer {
+    margin-top: 50px;
+    padding: 30px 20px;
+    border-top: 1px solid #ccc;
+    text-align: center;
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.6;
+  }
+  
+  .dark-mode .app-footer {
+    border-top: 1px solid #444;
+    color: #aaa;
+  }
+  
+  .footer-credit {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .app-footer a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .app-footer a:hover {
+    text-decoration: underline;
+  }
+
+  /* Add this to App.css */
+.stats-table th:nth-child(5), 
+.stats-table td:nth-child(5) {
+  text-align: center; /* Center the correlation value */
+  min-width: 120px;
+}

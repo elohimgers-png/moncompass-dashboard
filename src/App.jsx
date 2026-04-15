@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react'; // 1. ADDED useRef
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { toPng } from 'html-to-image'; // 2. ADDED html-to-image import
+import './App.css';
 
 function App() {
   const staticData = {
@@ -90,6 +92,33 @@ function App() {
 
   const [selectedCountries, setSelectedCountries] = useState(['KE', 'UG', 'SG']);
   const [darkMode, setDarkMode] = useState(false);
+
+  // 3. CREATED REFS FOR EACH CHART
+  const inflationChartRef = useRef(null);
+  const gdpChartRef = useRef(null);
+  const lineChartRef = useRef(null);
+  const populationChartRef = useRef(null);
+  const exchangeChartRef = useRef(null);
+
+  // 4. NEW FUNCTION TO DOWNLOAD CHART
+  const downloadChartImage = (ref, fileName) => {
+    if (ref.current === null) return;
+    
+    // Small delay to ensure rendering is complete
+    setTimeout(() => {
+      toPng(ref.current, { cacheBust: true, pixelRatio: 2 })
+        .then((dataUrl) => {
+          const link = document.createElement('a');
+          link.download = `${fileName}.png`;
+          link.href = dataUrl;
+          link.click();
+        })
+        .catch((err) => {
+          console.error('Error downloading image:', err);
+        });
+    }, 100);
+  };
+
   const handleCountryChange = (e) => {
     const { value, checked } = e.target;
     if (checked) {
@@ -110,19 +139,14 @@ function App() {
       return newItem;
     });
   };
-  // Helper function to convert data to CSV
+
   const downloadCSV = (data, filename) => {
     if (!data.length) return;
-
-    // Extract headers (Year + Country Names)
     const headers = ['year', ...allCountries.map(c => c.name)];
-    
-    // Convert data to CSV string
     const csvRows = [
       headers.join(','),
       ...data.map(row => headers.map(fieldName => JSON.stringify(row[fieldName] !== undefined ? row[fieldName] : '')).join(','))
     ];
-
     const csvString = csvRows.join('\n');
     const blob = new Blob([csvString], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
@@ -134,143 +158,241 @@ function App() {
     link.click();
     document.body.removeChild(link);
   };
+
+  // --- STATISTICAL HELPERS ---
+  const calculateMean = (data) => {
+    if (!data || data.length === 0) return 0;
+    const sum = data.reduce((acc, val) => acc + val, 0);
+    return (sum / data.length).toFixed(2);
+  };
+
+  const calculateVariance = (data) => {
+    if (!data || data.length === 0) return 0;
+    const mean = calculateMean(data);
+    const sumSquaredDiff = data.reduce((acc, val) => acc + Math.pow(val - mean, 2), 0);
+    return (sumSquaredDiff / data.length).toFixed(2);
+  };
+
+  const calculateStdDev = (data) => {
+    if (!data || data.length === 0) return 0;
+    const variance = calculateVariance(data);
+    return Math.sqrt(variance).toFixed(2);
+  };
+
+  const calculateCorrelation = (xData, yData) => {
+    if (xData.length !== yData.length || xData.length === 0) return "N/A";
+    const n = xData.length;
+    const sumX = xData.reduce((a, b) => a + b, 0);
+    const sumY = yData.reduce((a, b) => a + b, 0);
+    const sumXY = xData.reduce((sum, xi, i) => sum + (xi * yData[i]), 0);
+    const sumX2 = xData.reduce((sum, xi) => sum + (xi * xi), 0);
+    const sumY2 = yData.reduce((sum, yi) => sum + (yi * yi), 0);
+    const numerator = (n * sumXY) - (sumX * sumY);
+    const denominator = Math.sqrt(((n * sumX2) - (sumX * sumX)) * ((n * sumY2) - (sumY * sumY)));
+    if (denominator === 0) return "N/A";
+    return (numerator / denominator).toFixed(2);
+  };
+
+  const getStats = (datasetKey) => {
+    const data = staticData[datasetKey];
+    const stats = {};
+    const gdpData = staticData.gdp;
+    allCountries.forEach(country => {
+      if (selectedCountries.includes(country.code)) {
+        const values = data.map(d => d[country.name]);
+        const gdpValues = gdpData.map(d => d[country.name]);
+        stats[country.name] = {
+          mean: calculateMean(values),
+          variance: calculateVariance(values),
+          stdDev: calculateStdDev(values),
+          correlation: datasetKey === 'inflation' ? calculateCorrelation(values, gdpValues) : 'N/A'
+        };
+      }
+    });
+    return stats;
+  };
+
   return (
-    <div style={{ padding: '20px', backgroundColor: darkMode ? '#1a1a1a' : '#ffffff', fontFamily: 'Abel, sans-serif', color: darkMode ? '#e0e0e0' : '#333' }}>
-      <h1>MonCompass Dashboard v2 (Static Data)</h1>
-      <p>Comparing Sub-Saharan Africa vs Southeast Asia (2010-2025)</p>
-      <div style={{ marginBottom: '20px', textAlign: 'right' }}>
-        <button
-          onClick={() => setDarkMode(!darkMode)}
-          style={{
-            padding: '8px 16px',
-            cursor: 'pointer',
-            background: darkMode ? '#444' : '#eee',
-            color: darkMode ? '#fff' : '#333',
-            border: 'none',
-            borderRadius: '20px',
-            fontWeight: 'bold'
-          }}
-        >
-          {darkMode ? '☀ Light Mode' : '☾ Dark Mode'}
-        </button>
-      </div>
-      <div style={{ background: '#f4f4f4', padding: '15px', borderRadius: '8px', marginBottom: '20px' }}>
-        <h3>Select Countries to Compare:</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
-          {allCountries.map(c => (
-            <label key={c.code} style={{ display: 'flex', alignItems: 'center' }}>
+    <div className={darkMode ? 'app-container dark-mode' : 'app-container'}>
+      <header className="app-header">
+        <h1>Global Economic Indicators Dashboard</h1>
+        <div className="controls">
+          <button onClick={() => setDarkMode(!darkMode)} className="toggle-btn">
+            {darkMode ? '☀ Light Mode' : '☾ Dark Mode'}
+          </button>
+          <button 
+            onClick={() => downloadCSV(getFilteredData(staticData.inflation), 'inflation_data.csv')}
+            className="download-btn"
+          >
+            Download Inflation Data (CSV)
+          </button>
+        </div>
+      </header>
+
+      <div className="controls-section">
+        <h3>Select Countries:</h3>
+        <div className="checkbox-group">
+          {allCountries.map((country) => (
+            <label key={country.code} className="checkbox-label">
               <input
                 type="checkbox"
-                value={c.code}
-                checked={selectedCountries.includes(c.code)}
+                value={country.code}
+                checked={selectedCountries.includes(country.code)}
                 onChange={handleCountryChange}
-                style={{ marginRight: '5px' }}
               />
-              {c.name}
+              {country.name}
             </label>
           ))}
         </div>
       </div>
-      <div style={{ marginBottom: '20px', textAlign: 'right' }}>
-        <button onClick={() => downloadCSV(getFilteredData(staticData.inflation), 'inflation_data.csv')} style={{ padding: '8px 16px', cursor: 'pointer', background: '#007bff', color: 'white', border: 'none', borderRadius: '4px' }}>
-          Download Inflation Data (CSV)
-        </button>
-      </div>
-      <h2 style={{ color: darkMode ? '#e0e0e0' : '#333' }}>Inflation (Consumer Prices %)</h2>
-      <div style={{ width: '100%', height: 300, marginBottom: '40px', backgroundColor: darkMode ? '#2a2a2a' : 'white' }}>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={getFilteredData(staticData.inflation)}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="year" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            {allCountries.filter(c => selectedCountries.includes(c.code)).map((c, i) => (
-              <Bar key={c.code} dataKey={c.name} fill={`hsl(${i * 50}, 70%, 50%)`} />
+
+      <div className="stats-section">
+        <h3>Statistical Summary (Inflation & GDP Correlation)</h3>
+        <table className="stats-table">
+          <thead>
+            <tr>
+              <th>Country</th>
+              <th>Mean (Inf %)</th>
+              <th>Variance</th>
+              <th>Std Dev</th>
+              <th>Correlation <br/><span style={{fontSize:'0.8em', fontWeight:'normal'}}>(Inf vs GDP)</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.entries(getStats('inflation')).map(([countryName, stats]) => (
+              <tr key={countryName}>
+                <td>{countryName}</td>
+                <td>{stats.mean}</td>
+                <td>{stats.variance}</td>
+                <td>{stats.stdDev}</td>
+                <td style={{ fontWeight: 'bold', color: stats.correlation > 0 ? '#d32f2f' : '#388e3c' }}>
+                  {stats.correlation}
+                </td>
+              </tr>
             ))}
-          </BarChart>
-        </ResponsiveContainer>
+          </tbody>
+        </table>
+        <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '10px' }}>
+          * Positive correlation (Red) suggests inflation tends to rise with GDP growth. <br/>
+          * Negative correlation (Green) suggests inflation tends to fall when GDP rises.
+        </p>
       </div>
 
-      <h2 style={{ color: darkMode ? '#e0e0e0' : '#333' }}>GDP Growth (Annual %)</h2>
-      <div style={{ width: '100%', height: 300, marginBottom: '40px', backgroundColor: darkMode ? '#2a2a2a' : 'white' }}>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={getFilteredData(staticData.gdp)}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="year" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            {allCountries.filter(c => selectedCountries.includes(c.code)).map((c, i) => (
-              <Bar key={c.code} dataKey={c.name} fill={`hsl(${i * 50 + 180}, 70%, 50%)`} />
-            ))}
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-      <h2 style={{ color: darkMode ? '#e0e0e0' : '#333' }}>Inflation Trend (Line Chart)</h2>
-      <div style={{ width: '100%', height: 300, marginBottom: '40px', backgroundColor: darkMode ? '#2a2a2a' : 'white' }}>
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={getFilteredData(staticData.inflation)}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="year" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            {allCountries.filter(c => selectedCountries.includes(c.code)).map((c, i) => (
-              <Line type="monotone" key={c.code} dataKey={c.name} stroke={`hsl(${i * 60}, 70%, 50%)`} strokeWidth={2} dot={{ r: 4 }} />
-            ))}
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-      <h2 style={{ color: darkMode ? '#e0e0e0' : '#333' }}>Population (Millions)</h2>
-      <div style={{ width: '100%', height: 300, marginBottom: '40px', backgroundColor: darkMode ? '#2a2a2a' : 'white' }}>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={getFilteredData(staticData.population)}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="year" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            {allCountries.filter(c => selectedCountries.includes(c.code)).map((c, i) => (
-              <Bar key={c.code} dataKey={c.name} fill={`hsl(${i * 40 + 60}, 70%, 50%)`} />
-            ))}
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-      <h2 style={{ color: darkMode ? '#e0e0e0' : '#333' }}>Exchange Rate (LCU per USD)</h2>
-      <div style={{ width: '100%', height: 300, marginBottom: '40px', backgroundColor: darkMode ? '#2a2a2a' : 'white' }}>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={getFilteredData(staticData.exchange)}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="year" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            {allCountries.filter(c => selectedCountries.includes(c.code)).map((c, i) => (
-              <Bar key={c.code} dataKey={c.name} fill={`hsl(${i * 40 + 90}, 70%, 50%)`} />
-            ))}
-          </BarChart>
-        </ResponsiveContainer>
+      {/* 5. UPDATED CHART SECTIONS WITH REFS AND BUTTONS */}
+      
+      <div className="chart-section">
+        <div className="chart-header">
+            <h2>Inflation (Consumer Prices %)</h2>
+            <button className="icon-btn" onClick={() => downloadChartImage(inflationChartRef, 'inflation-chart')}>📷 Download Chart</button>
+        </div>
+        <div className="chart-container" ref={inflationChartRef}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={getFilteredData(staticData.inflation)}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="year" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              {allCountries.filter(c => selectedCountries.includes(c.code)).map((c, i) => (
+                <Bar key={c.code} dataKey={c.name} fill={`hsl(${i * 50}, 70%, 50%)`} />
+              ))}
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       </div>
 
-      {/* --- CREDIT FOOTER --- */}
-      <div style={{ 
-        marginTop: '50px', 
-        padding: '30px 20px', 
-        borderTop: '1px solid #ccc', 
-        textAlign: 'center', 
-        fontSize: '0.95rem', 
-        color: darkMode ? '#aaa' : '#555',
-        lineHeight: '1.6'
-      }}>
-        <p style={{ fontWeight: 'bold', marginBottom: '10px' }}>
+      <div className="chart-section">
+        <div className="chart-header">
+            <h2>GDP Growth (Annual %)</h2>
+            <button className="icon-btn" onClick={() => downloadChartImage(gdpChartRef, 'gdp-chart')}>📷 Download Chart</button>
+        </div>
+        <div className="chart-container" ref={gdpChartRef}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={getFilteredData(staticData.gdp)}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="year" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              {allCountries.filter(c => selectedCountries.includes(c.code)).map((c, i) => (
+                <Bar key={c.code} dataKey={c.name} fill={`hsl(${i * 50 + 180}, 70%, 50%)`} />
+              ))}
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      <div className="chart-section">
+        <div className="chart-header">
+            <h2>Inflation Trend (Line Chart)</h2>
+            <button className="icon-btn" onClick={() => downloadChartImage(lineChartRef, 'inflation-trend-chart')}>📷 Download Chart</button>
+        </div>
+        <div className="chart-container" ref={lineChartRef}>
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={getFilteredData(staticData.inflation)}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="year" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              {allCountries.filter(c => selectedCountries.includes(c.code)).map((c, i) => (
+                <Line type="monotone" key={c.code} dataKey={c.name} stroke={`hsl(${i * 60}, 70%, 50%)`} strokeWidth={2} dot={{ r: 4 }} />
+              ))}
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      <div className="chart-section">
+        <div className="chart-header">
+            <h2>Population (Millions)</h2>
+            <button className="icon-btn" onClick={() => downloadChartImage(populationChartRef, 'population-chart')}>📷 Download Chart</button>
+        </div>
+        <div className="chart-container" ref={populationChartRef}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={getFilteredData(staticData.population)}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="year" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              {allCountries.filter(c => selectedCountries.includes(c.code)).map((c, i) => (
+                <Bar key={c.code} dataKey={c.name} fill={`hsl(${i * 40 + 60}, 70%, 50%)`} />
+              ))}
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      <div className="chart-section">
+        <div className="chart-header">
+            <h2>Exchange Rate (LCU per USD)</h2>
+            <button className="icon-btn" onClick={() => downloadChartImage(exchangeChartRef, 'exchange-chart')}>📷 Download Chart</button>
+        </div>
+        <div className="chart-container" ref={exchangeChartRef}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={getFilteredData(staticData.exchange)}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="year" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              {allCountries.filter(c => selectedCountries.includes(c.code)).map((c, i) => (
+                <Bar key={c.code} dataKey={c.name} fill={`hsl(${i * 40 + 90}, 70%, 50%)`} />
+              ))}
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      <footer className="app-footer">
+        <p className="footer-credit">
           This web app was conceptualised and designed by Eng. Dr. Gerson Japhet Fumbuka, a DBA Scholar at INTI International University and Colleges, Nilai, Malaysia
         </p>
-        <p>
-          with close guidance from engineers and developers from <a href="https://huggingface.co/zai-org" target="_blank" rel="noopener noreferrer" style={{ color: '#007bff', textDecoration: 'none' }}>huggingface.co/zai-org</a>
+        <p className="footer-guidance">
+          with close guidance from engineers and developers from <a href="https://huggingface.co/zai-org" target="_blank" rel="noopener noreferrer">huggingface.co/zai-org</a>
         </p>
-      </div>
-
+      </footer>
     </div>
   );
 }
